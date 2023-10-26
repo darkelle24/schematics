@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "DeepResourceSchematic",
+    "title": "Deep Resource Schematic",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "The name of the resource"
+      },
+      "file": {
+        "type": "boolean",
+        "default": false,
+        "description": "Indicate if the resource should handle files"
+      }
+    },
+    "required": [
+      "name"
+    ]
+}
