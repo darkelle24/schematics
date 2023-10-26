@@ -1,26 +1,30 @@
 import { Module } from '@nestjs/common';
-import { {{ pascalCase name }}Controller } from './{{ kebabCase name }}.controller';
-import { {{ pascalCase name }}Service } from './{{ kebabCase name }}.service';
-
-{{#if file}}
+import { <%= classify(name) %>Controller } from './<%= dasherize(name) %>.controller';
+import { <%= classify(name) %>Service } from './<%= dasherize(name) %>.service';
+import { <%= classify(name) %>Entity } from './entities/<%= dasherize(name) %>.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+<% if (file) { %>
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-{{/if}}
+<% } %>
 
 @Module({
-  controllers: [{{ pascalCase name }}Controller],
-  exports: [{{ pascalCase name }}Service],
-  providers: [{{ pascalCase name }}Service],
-  {{#if file}}
+  controllers: [<%= classify(name) %>Controller],
+  providers: [<%= classify(name) %>Service],
+  exports: [<%= classify(name) %>Service],
+  
   imports: [
+	TypeOrmModule.forFeature([<%= classify(name) %>Entity]),
+<% if (file) { %>
     MulterModule.registerAsync({
-        imports: [ConfigModule],
-        useFactory: async (configService: ConfigService) => ({
-          dest: configService.get<string>('FILE_DEST'),
-        }),
-        inject: [ConfigService],
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        dest: configService.get<string>('FILE_DEST'),
+      }),
+      inject: [ConfigService],
     }),
+ <% } %>
   ],
-  {{/if}}
+ 
 })
-export class {{ pascalCase name }}Module {}
+export class <%= classify(name) %>Module {}

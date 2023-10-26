@@ -1,72 +1,70 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { strings } from '@angular-devkit/core';
 import {
-  apply,
-  chain,
-  mergeWith,
-  move,
   Rule,
   SchematicContext,
-  template,
   Tree,
+  apply,
   url,
+  template,
+  move,
+  chain,
+  MergeStrategy,
+  mergeWith,
 } from '@angular-devkit/schematics';
+import { strings } from '@angular-devkit/core';
 
-// Vous pouvez définir des options en fonction de votre `schema.json`
-interface DeepResourceOptions {
+// Vous pouvez recevoir des options de la ligne de commande qui peuvent être définies dans un modèle d'interface
+export interface MySchematicOptions {
   name: string;
-  file: boolean; // Cette option détermine si un module de fichier doit être inclus
-  // ...autres options...
+  path: string;
+  file: boolean;
 }
 
-export function deepResource(options: DeepResourceOptions): Rule {
+function updateTsConfig(options: MySchematicOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const rules: Rule[] = [
-      // Créer les fichiers à partir des modèles dans le dossier `/files`
-      mergeWith(
-        apply(url('./files'), [
-          template({
-            ...strings, // pour utiliser des fonctions comme 'dasherize', 'classify', etc.
-            ...options, // appliquer les options fournies par l'utilisateur (ex. nom de la ressource)
-          }),
-          move('src'), // ou un autre répertoire cible, en fonction de la structure de votre projet
-        ]),
-      ),
-      // Ajouter une règle pour manipuler le fichier tsconfig.json
-      (tree: Tree) => {
-        const tsConfigPath = '/tsconfig.json'; // chemin vers votre tsconfig.json
-        const buffer = tree.read(tsConfigPath);
+    const tsConfigPath = '/tsconfig.json'; // chemin vers votre fichier tsconfig.json
+    const buffer = tree.read(tsConfigPath); // lire le fichier tsconfig.json
 
-        if (!buffer) {
-          _context.logger.error('Could not find tsconfig.json');
-          return;
-        }
+    if (!buffer) {
+      _context.logger.error('Could not find tsconfig.json');
+      return;
+    }
 
-        const tsConfig = JSON.parse(buffer.toString());
-        const compilerOptions = tsConfig.compilerOptions;
+    // Transformer le fichier en JSON
+    const tsConfigContent = buffer.toString();
+    const tsConfig = JSON.parse(tsConfigContent);
 
-        if (!compilerOptions.paths) {
-          compilerOptions.paths = {};
-        }
+    // Définir le nouveau chemin
+    const newKey = `@${strings.capitalize(options.name)}/*`; // Par exemple, "@Example/*"
+    const newValue = [`src/${strings.dasherize(options.path)}/*`];
 
-        // Générer le chemin en fonction du nom de la ressource.
-        const resourcePath = `${options.name.toLowerCase()}`;
-        const newPathKey = `@${options.name}/*`;
-        const newPathValue = [`src/api/${resourcePath}/*`];
-        compilerOptions.paths[newPathKey] = newPathValue;
-        tree.overwrite(tsConfigPath, JSON.stringify(tsConfig, null, 2));
-      },
-      // Conditionnellement ajouter des fichiers ou des configurations supplémentaires en fonction de `options.file`
-      (tree: Tree, _context: SchematicContext) => {
-        if (options.file) {
-          // Ici, vous pouvez ajouter la logique pour manipuler d'autres fichiers
-          // ou configurer le module pour gérer les fichiers en fonction de `options.file`
-          // Par exemple, ajouter des dépendances, créer des fichiers supplémentaires, etc.
-        }
-      },
-    ];
+    // Ajouter le nouveau chemin au tsconfig
+    if (!tsConfig.compilerOptions.paths) {
+      tsConfig.compilerOptions.paths = {};
+    }
+    tsConfig.compilerOptions.paths[newKey] = newValue;
 
-    // Exécuter les règles en séquence
-    return chain(rules)(tree, _context);
+    // Réécrire le fichier tsconfig.json
+    tree.overwrite(tsConfigPath, JSON.stringify(tsConfig, null, 2));
+
+    return tree;
+  };
+}
+
+export function deepResource(options: MySchematicOptions): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    const templateSource = apply(
+      url('./files'), // chemin vers vos fichiers de modèle
+      [
+        template({
+          ...strings, // utilise des helpers comme `dasherize`
+          ...options,
+        }),
+        move(`src/${strings.dasherize(options.path)}/${strings.dasherize(options.name)}`),
+      ]
+    );
+
+    // Cette règle fusionne le Tree du template avec le Tree de destination
+    const rule = mergeWith(templateSource, MergeStrategy.Default);
+    return chain([rule, updateTsConfig(options)])(tree, _context);
   };
 }

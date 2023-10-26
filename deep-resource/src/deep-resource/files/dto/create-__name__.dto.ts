@@ -1,3 +1,3 @@
-export class Create{{ pascalCase name }}Dto {
-    // Ajoutez les propriétés nécessaires pour la création d'un(e) {{ pascalCase name }}.
-  }
+export class Create<%= classify(name) %>Dto {
+  // Ajoutez les propriétés nécessaires pour la création d'un(e) <%= classify(name) %>.
+}

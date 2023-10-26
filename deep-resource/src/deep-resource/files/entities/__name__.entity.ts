@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class {{ pascalCase name }}Entity extends BaseEntity {
+export class <%= classify(name) %>Entity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

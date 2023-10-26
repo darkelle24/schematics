@@ -1,9 +1,10 @@
 {
-  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
-  "schematics": {
-    "deep-resource": {
-      "description": "A blank schematic.",
-      "factory": "./deep-resource/index#deepResource"
+    "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "deep-resource": {
+            "description": "Crée une nouvelle ressource profonde",
+            "factory": "./deep-resource/index#deepResource",
+            "schema": "./deep-resource/schema.json"
+        }
     }
-  }
 }
