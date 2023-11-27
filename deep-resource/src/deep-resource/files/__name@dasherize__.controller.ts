@@ -1,10 +1,8 @@
-// __name__.controller.ts.template
-
 import {
     Controller,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { <%= classify(name) %>Service } from './<%= name %>.service';
+import { <%= classify(name) %>Service } from './<%= dasherize(name) %>.service';
 
 @ApiTags('<%= classify(name) %>')
 @Controller('<%= name.toLowerCase() %>')

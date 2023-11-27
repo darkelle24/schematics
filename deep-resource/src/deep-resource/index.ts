@@ -19,37 +19,6 @@ export interface MySchematicOptions {
   file: boolean;
 }
 
-function updateTsConfig(options: MySchematicOptions): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
-    const tsConfigPath = '/tsconfig.json'; // chemin vers votre fichier tsconfig.json
-    const buffer = tree.read(tsConfigPath); // lire le fichier tsconfig.json
-
-    if (!buffer) {
-      _context.logger.error('Could not find tsconfig.json');
-      return;
-    }
-
-    // Transformer le fichier en JSON
-    const tsConfigContent = buffer.toString();
-    const tsConfig = JSON.parse(tsConfigContent);
-
-    // Définir le nouveau chemin
-    const newKey = `@${strings.capitalize(options.name)}/*`; // Par exemple, "@Example/*"
-    const newValue = [`src/${strings.dasherize(options.path)}/*`];
-
-    // Ajouter le nouveau chemin au tsconfig
-    if (!tsConfig.compilerOptions.paths) {
-      tsConfig.compilerOptions.paths = {};
-    }
-    tsConfig.compilerOptions.paths[newKey] = newValue;
-
-    // Réécrire le fichier tsconfig.json
-    tree.overwrite(tsConfigPath, JSON.stringify(tsConfig, null, 2));
-
-    return tree;
-  };
-}
-
 export function deepResource(options: MySchematicOptions): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const templateSource = apply(
@@ -65,6 +34,6 @@ export function deepResource(options: MySchematicOptions): Rule {
 
     // Cette règle fusionne le Tree du template avec le Tree de destination
     const rule = mergeWith(templateSource, MergeStrategy.Default);
-    return chain([rule, updateTsConfig(options)])(tree, _context);
+    return chain([rule])(tree, _context);
   };
 }

@@ -12,7 +12,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [<%= classify(name) %>Controller],
   providers: [<%= classify(name) %>Service],
   exports: [<%= classify(name) %>Service],
-  
   imports: [
 	TypeOrmModule.forFeature([<%= classify(name) %>Entity]),
 <% if (file) { %>

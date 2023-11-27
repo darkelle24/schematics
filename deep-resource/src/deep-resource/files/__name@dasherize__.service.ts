@@ -2,7 +2,7 @@ import { CRUDService } from '@Helper/crud.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { <%= classify(name) %>Entity } from './entities/<%= name.toLowerCase() %>.entity';
+import { <%= classify(name) %>Entity } from './entities/<%= dasherize(name) %>.entity';
 
 @Injectable()
 export class <%= classify(name) %>Service extends CRUDService<<%= classify(name) %>Entity> {

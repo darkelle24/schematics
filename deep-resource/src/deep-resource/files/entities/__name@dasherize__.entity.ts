@@ -21,7 +21,7 @@ export class <%= classify(name) %>Entity extends BaseEntity {
   @Expose()
   readonly updated_at: Date;
 
-  @VersionColumn()
+  @VersionColumn({ default: 0 })
   @Expose()
   readonly version: number;
 }
