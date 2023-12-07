@@ -1,10 +1,15 @@
 {
-    "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
-    "schematics": {
-        "deep-resource": {
-            "description": "Crée une nouvelle ressource profonde",
-            "factory": "./deep-resource/index#deepResource",
-            "schema": "./deep-resource/schema.json"
-        }
+  "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "deep-resource": {
+      "description": "Crée une nouvelle ressource profonde",
+      "factory": "./deep-resource/index#deepResource",
+      "schema": "./deep-resource/schema.json"
+    },
+    "prunidor-tests": {
+      "description": "A blank schematic.",
+      "factory": "./prunidor-tests/index#prunidorTests",
+      "schema": "./prunidor-tests/schema.json"
     }
+  }
 }

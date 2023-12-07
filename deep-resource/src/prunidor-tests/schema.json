@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "TestPrunidor",
+    "description": "Un schematic pour votre ressource profonde.",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Le nom du test à générer."
+        },
+        "file": {
+            "type": "boolean",
+            "description": "Indique si un fichier doit être géré par le test.",
+            "default": false
+        },
+        "basePath": {
+            "type": "string",
+            "description": "Le chemin de base de l'API.",
+            "default": "/"
+        }
+    },
+    "required": [
+        "name"
+    ],
+    "additionalProperties": false
+}
