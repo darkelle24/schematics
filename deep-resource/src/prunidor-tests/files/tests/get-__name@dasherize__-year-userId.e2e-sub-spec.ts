@@ -153,8 +153,8 @@ export function get_<%= underscore(name) %>_year_userId(tools: Tools<%= classify
 
     it('Forbidden Access for Different User (Regular User)', async () => {
       await testRequest(
-        DefaultUserVisualControl.User,
-        DefaultUserVisualControl.Admin,
+        DefaultUser<%= classify(name) %>.User,
+        DefaultUser<%= classify(name) %>.Admin,
         new Date().getFullYear(),
         HttpStatus.FORBIDDEN,
       );
