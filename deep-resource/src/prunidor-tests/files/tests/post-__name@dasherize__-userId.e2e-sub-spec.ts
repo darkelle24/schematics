@@ -236,7 +236,7 @@ export function post_<%= underscore(name) %>_userId(tools: Tools<%= classify(nam
           )}`, async () => {
             await testRequest(actorRole, targetRole, true, undefined, {
               year: getCurrentYear() - 1,
-            });
+            }, () => {});
           });
         }
       });
