@@ -150,7 +150,6 @@ export function post_<%= underscore(name) %>_userId(tools: Tools<%= classify(nam
           test.target,
  	        test.shouldSucceed,
           test.errorCode,
-	        {},
         );
       });
     });
