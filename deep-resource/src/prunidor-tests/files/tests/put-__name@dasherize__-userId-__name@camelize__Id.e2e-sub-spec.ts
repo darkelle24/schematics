@@ -45,7 +45,7 @@ export function put_<%= underscore(name) %>_userId_<%= camelize(name) %>Id(
         updateData: any,
         data: any,
       ) => void = (_originalData: any, updateData: any, data: any) => {
-        expect(data.pest_name).toBe(updateData.pest_name);
+        expect(data.name).toBe(updateData.name);
       },
       year: number = new Date().getFullYear(),
     ) => {
